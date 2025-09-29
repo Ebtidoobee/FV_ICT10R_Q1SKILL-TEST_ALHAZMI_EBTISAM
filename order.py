@@ -1,44 +1,50 @@
 from pyscript import document
 
-def create_order(event=None):
-# --- Customer Details ---
-name = document.querySelector("#name").value
-address = document.querySelector("#address").value
-number = document.querySelector("#number").value
 
-```
-# --- Menu Items ---
-checkboxes = document.querySelectorAll("input[name='items']:checked")
+prices = {
+    "Pasta": 100,
+    "Croissant": 80,
+    "Burger": 95,
+    "Pie": 120
+}
 
-items = []
-total = 0
+def generate_message(event):
+    name = document.getElementById("name").value
+    address = document.getElementById("address").value
+    number = document.getElementById("number").value
 
-# Loop through selected items
-for checkbox in checkboxes:
-    label = checkbox.parentElement.innerText.split("(")[0].strip()  # item name
-    price = int(checkbox.value)  # numeric price
-    items.append(f"{label} - ₱{price}")
-    total += price
+   
+    ordered_items = []
+    total = 0
 
-# If no items are selected
-items_str = "\n".join(items) if items else "No items selected"
+    for food_id, food_name in {
+        "food1": "Pasta",
+        "food2": "Croissant",
+        "food3": "Burger",
+        "food4": "Pie"
+    }.items():
+        checkbox = document.getElementById(food_id)
+        if checkbox.checked:
+            ordered_items.append(food_name)
+            total += prices[food_name]
 
-# --- Final Order Summary ---
-order = f"""
-```
+    
+    if ordered_items:
+        items_str = "\n".join(ordered_items)
+    else:
+        items_str = "No items selected."
 
-👤 Customer Details:
-Name     : {name}
-Address  : {address}
-Phone Number : {number}
+    message = f"""
+Order for: {name}
+Address: {address}
+Contact Number: {number}
 
-🛒 Items Ordered:
+Items Ordered:
 {items_str}
 
-💵 Total: ₱{total}
+Total: ₱{total}.00
 """
 
-```
-# Show only once in #output
-document.querySelector("#output").innerText = order
-```
+   
+    output = document.getElementById("final")
+    output.innerHTML = f"<pre>{message}</pre>"
